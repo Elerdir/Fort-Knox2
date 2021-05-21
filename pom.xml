@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.4.5</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>cz.bertikit.fortknox</groupId>
+	<artifactId>Fort-Knox</artifactId>
+	<version>21.5.0.0</version>
+	<packaging>war</packaging>
+
+	<name>Fort-Knox</name>
+
+	<properties>
+		<java.version>11</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- Test-->
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.7.2</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<version>3.10.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<properties>
+				<spring.profiles.active>dev</spring.profiles.active>
+				<projectVersion>${project.version}</projectVersion>
+			</properties>
+
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>application.properties</include>
+							<include>**/*-dev.*</include>
+						</includes>
+					</resource>
+				</resources>
+
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<version>2.4.5</version>
+						<configuration>
+							<profiles>
+								<profile>dev</profile>
+							</profiles>
+						</configuration>
+					</plugin>
+
+					<!-- Build timestamp label -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.10</version>
+						<executions>
+							<execution>
+								<id>timestamp-property</id>
+								<goals>
+									<goal>timestamp-property</goal>
+								</goals>
+								<configuration>
+									<name>buildTimestampLabel</name>
+									<pattern>d.M.yyyy H:mm</pattern>
+									<locale>cs</locale>
+									<timeZone>Europe/Prague</timeZone>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>test</id>
+
+			<properties>
+				<spring.profiles.active>test</spring.profiles.active>
+				<projectVersion>${project.version}</projectVersion>
+			</properties>
+
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>application.properties</include>
+							<include>**/*-test.*</include>
+						</includes>
+					</resource>
+				</resources>
+
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<version>2.4.5</version>
+						<configuration>
+							<profiles>
+								<profile>test</profile>
+							</profiles>
+						</configuration>
+					</plugin>
+
+					<!-- Build timestamp label -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.10</version>
+						<executions>
+							<execution>
+								<id>timestamp-property</id>
+								<goals>
+									<goal>timestamp-property</goal>
+								</goals>
+								<configuration>
+									<name>buildTimestampLabel</name>
+									<pattern>d.M.yyyy H:mm</pattern>
+									<locale>cs</locale>
+									<timeZone>Europe/Prague</timeZone>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>prod</id>
+
+			<properties>
+				<spring.profiles.active>prod</spring.profiles.active>
+				<projectVersion>${project.version}</projectVersion>
+			</properties>
+
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>application.properties</include>
+							<include>**/*-prod.*</include>
+						</includes>
+					</resource>
+				</resources>
+
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<version>2.4.5</version>
+						<configuration>
+							<profiles>
+								<profile>prod</profile>
+							</profiles>
+						</configuration>
+					</plugin>
+
+					<!-- Build timestamp label -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.10</version>
+						<executions>
+							<execution>
+								<id>timestamp-property</id>
+								<goals>
+									<goal>timestamp-property</goal>
+								</goals>
+								<configuration>
+									<name>buildTimestampLabel</name>
+									<pattern>d.M.yyyy H:mm</pattern>
+									<locale>cs</locale>
+									<timeZone>Europe/Prague</timeZone>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>
